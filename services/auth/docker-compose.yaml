@@ -7,7 +7,7 @@ services:
     image: postgres:16-alpine
     restart: always
     env_file:
-      - .env-prod
+      - .env
 
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -19,3 +19,8 @@ services:
 
     networks:
       - custom
+
+
+networks:
+  custom:
+    driver: bridge
