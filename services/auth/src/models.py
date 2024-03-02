@@ -1,11 +1,11 @@
-from sqlalchemy import Table, Column, MetaData, Enum, Integer, String, TIMESTAMP, ForeignKey
-
-from services.auth.src.utils import get_public_id
+import enum
+from sqlalchemy import Table, Column, MetaData, Integer, String, Enum, ForeignKey
+from src.utils import get_public_id
 
 meta_data = MetaData()
 
 
-class UserRoles(Enum):
+class UserRoles(enum.Enum):
     EMPLOYEE = "EMPLOYEE"
     ADMIN = "ADMIN"
     MANAGER = "MANAGER"
