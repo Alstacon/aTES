@@ -1,5 +1,6 @@
 import uuid
 import jwt
+import bcrypt
 from config import settings
 
 
@@ -23,3 +24,21 @@ def decode_jwt(
 ):
     decoded = jwt.decode(token, public_key, algorithms=[algotithm])
     return decoded
+
+
+def hash_password(
+        password: str
+) -> bytes:
+    salt = bcrypt.gensalt()
+    password_bytes = password.encode()
+    return bcrypt.hashpw(password_bytes, salt)
+
+
+def validate_password(
+        password: str,
+        hashed_password: bytes
+) -> bool:
+    return bcrypt.checkpw(
+        password=password.encode(),
+        hashed_password=hashed_password
+    )
