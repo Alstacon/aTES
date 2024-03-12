@@ -1,5 +1,6 @@
 import enum
 from sqlalchemy import Table, Column, MetaData, Integer, String, Enum, ForeignKey
+
 from src.utils import get_public_id
 
 meta_data = MetaData()
@@ -20,7 +21,7 @@ class User:
             'public_id',
             String(50),
             unique=True,
-            default=get_public_id,
+            default=get_public_id(),
             nullable=False
         ),
         Column('username', String(50), nullable=False),

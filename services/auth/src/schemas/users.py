@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.models import UserRoles
+from src.models.users import UserRoles
 
 
 class AddUserSchema(BaseModel):
