@@ -14,12 +14,9 @@ class UpdateUserSchema(BaseModel):
     role: UserRoles
 
 
-class InfoUserSchema(BaseModel):
+class InfoUserSchema(AddUserSchema):
     id: int
     public_id: str
-    username: str
-    email: str
-    role: UserRoles
 
 
 class PubIDUserSchema(BaseModel):
