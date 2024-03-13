@@ -1,16 +1,34 @@
-from fastapi import APIRouter, Depends
+from typing import Any
 
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette import status
+
+from services.exceptions import UserAlreadyExists
 from services.identify_users import get_current_auth_user
-from src.schemas.users import InfoUserSchema
+from services.users import create_user as create_user_service
+from src.models.db_helper import db_helper
+from src.schemas.users import InfoUserSchema, AddUserSchema
 
-router = APIRouter(prefix='/users', tags=['users'])
+router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get('/me/')
-def auth_user_info(
-        user: InfoUserSchema = Depends(get_current_auth_user)
-):
+@router.post("/", response_model=InfoUserSchema, status_code=status.HTTP_201_CREATED)
+async def create_user(
+    user_data: AddUserSchema,
+    session: AsyncSession = Depends(db_helper.session_dependency),
+) -> dict[str, Any]:
+    try:
+        return await create_user_service(session=session, user_data=user_data)
+    except UserAlreadyExists:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="User already exists"
+        )
+
+
+@router.get("/me/")
+def auth_user_info(user: InfoUserSchema = Depends(get_current_auth_user)):
     return {
-        'username': user.username,
-        'email': user.email,
+        "username": user.username,
+        "email": user.email,
     }
