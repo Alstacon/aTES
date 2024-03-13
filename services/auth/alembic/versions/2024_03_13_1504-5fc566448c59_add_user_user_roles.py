@@ -1,8 +1,8 @@
 """add user, user roles
 
-Revision ID: 24d26c3850d1
+Revision ID: 5fc566448c59
 Revises: 
-Create Date: 2024-03-13 14:12:15.787858
+Create Date: 2024-03-13 15:04:54.733776
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "24d26c3850d1"
+revision: str = "5fc566448c59"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -31,6 +31,7 @@ def upgrade() -> None:
             sa.Enum("EMPLOYEE", "ADMIN", "MANAGER", name="userroles"),
             nullable=False,
         ),
+        sa.Column("password", sa.String(length=16), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("email"),
