@@ -1,9 +1,9 @@
 import enum
 from sqlalchemy import Table, Column, MetaData, Integer, String, Enum, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 
+from src.models.base import Base
 from src.utils import get_public_id
-
-meta_data = MetaData()
 
 
 class UserRoles(enum.Enum):
@@ -12,28 +12,8 @@ class UserRoles(enum.Enum):
     MANAGER = "MANAGER"
 
 
-class User:
-    __table__ = Table(
-        'user',
-        meta_data,
-        Column('id', Integer, primary_key=True),
-        Column(
-            'public_id',
-            String(50),
-            unique=True,
-            default=get_public_id(),
-            nullable=False
-        ),
-        Column('username', String(50), nullable=False),
-        Column('email', String(50), nullable=False, unique=True),
-        Column('role',
-               Enum(UserRoles),
-               default=UserRoles.EMPLOYEE,
-               nullable=False)
-    )
-
-    id: int
-    public_id: str
-    username: str
-    email: str
-    role: UserRoles
+class User(Base):
+    public_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=False, default=get_public_id())
+    username: Mapped[str] = mapped_column(String(32), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    role: Mapped[str] = mapped_column(Enum(UserRoles), default=UserRoles.EMPLOYEE, nullable=False)
