@@ -21,7 +21,7 @@ class User(Base):
     role: Mapped[UserRoles] = mapped_column(
         Enum(UserRoles), default=UserRoles.EMPLOYEE, nullable=False
     )
-    password: Mapped[str] = mapped_column(String(16), nullable=False)
+    password: Mapped[str] = mapped_column(String(100), nullable=False)
 
     def __str__(self):
         return f"{self.__class__.__name__}(id={self.id}, username={self.username!r})"
