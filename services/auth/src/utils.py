@@ -11,23 +11,18 @@ from starlette import status
 
 from config import settings
 
+
 def get_public_id() -> str:
     return uuid.uuid4().hex
 
 
-def hash_password(
-        password: str
-) -> bytes:
+def hash_password(password: str) -> str:
     salt = bcrypt.gensalt()
     password_bytes = password.encode()
-    return bcrypt.hashpw(password_bytes, salt)
+    return bcrypt.hashpw(password_bytes, salt).decode("utf-8")
 
 
-def validate_password(
-        password: str,
-        hashed_password: bytes
-) -> bool:
+def validate_password(password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(
-        password=password.encode(),
-        hashed_password=hashed_password
+        password=password.encode(), hashed_password=hashed_password.encode()
     )
