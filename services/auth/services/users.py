@@ -29,3 +29,8 @@ async def get_user_by_id(session: AsyncSession, user_id: int) -> User:
     print(user)
     return user
 
+
+async def get_user_by_username(session: AsyncSession, username: str) -> User | None:
+    stmt = select(User).where(User.username == username)
+    user: User | None = await session.scalar(stmt)
+    return user
