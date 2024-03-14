@@ -7,6 +7,7 @@ from starlette import status
 from services.exceptions import UserAlreadyExists
 from services.identify_users import get_current_auth_user
 from services.users import create_user as create_user_service
+from src.models import User
 from src.models.db_helper import db_helper
 from src.schemas.users import InfoUserSchema, AddUserSchema
 
@@ -17,13 +18,10 @@ router = APIRouter(prefix="/users", tags=["users"])
 async def create_user(
     user_data: AddUserSchema,
     session: AsyncSession = Depends(db_helper.session_dependency),
-) -> dict[str, Any]:
-    try:
-        return await create_user_service(session=session, user_data=user_data)
-    except UserAlreadyExists:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="User already exists"
-        )
+) -> User:
+    if not (user := await create_user_service(session=session, user_data=user_data)):
+        raise UserAlreadyExists()
+    return user
 
 
 @router.get("/me/")
