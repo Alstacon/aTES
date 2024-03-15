@@ -10,14 +10,14 @@ from config import settings
 
 
 def encode_jwt(
-        payload: dict,
-        private_key: str = settings.auth_jwt.private_key_path.read_text(),
-        algorithm: str = settings.auth_jwt.algorithm,
-        expire_timedelta: datetime.timedelta | None = None,
-        expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
+    payload: dict,
+    private_key: str = settings.auth_jwt.private_key_path.read_text(),
+    algorithm: str = settings.auth_jwt.algorithm,
+    expire_timedelta: datetime.timedelta | None = None,
+    expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
 ):
     to_encode = payload.copy()
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(datetime.UTC)
     if expire_timedelta:
         expire = now + expire_timedelta
     else:
@@ -31,18 +31,19 @@ def encode_jwt(
 
 
 def decode_jwt(
-        token: str | bytes,
-        public_key: str = settings.auth_jwt.public_key_path.read_text(),
-        algotithm: str = settings.auth_jwt.algorithm,
+    token: str | bytes,
+    public_key: str = settings.auth_jwt.public_key_path.read_text(),
+    algorithm: str = settings.auth_jwt.algorithm,
 ):
-    decoded = jwt.decode(token, public_key, algorithms=[algotithm])
+    decoded = jwt.decode(token, public_key, algorithms=[algorithm])
     return decoded
 
 
 def get_current_token_payload(
-        credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+    credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
 ) -> dict:
     token = credentials.credentials
+    print(token)
     try:
         payload = decode_jwt(token)
     except InvalidTokenError as e:

@@ -25,7 +25,7 @@ async def create_user(
 
 
 @router.get("/me/")
-def auth_user_info(user: InfoUserSchema = Depends(get_current_auth_user)):
+async def auth_user_info(user: InfoUserSchema = Depends(get_current_auth_user)):
     return {
         "username": user.username,
         "email": user.email,

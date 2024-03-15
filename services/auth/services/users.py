@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.models import User
 from src.models.users import UserRoles
-from src.schemas.users import AddUserSchema
+from src.schemas.users import AddUserSchema, InfoUserSchema
 from src.utils import hash_password
 
 
@@ -20,7 +20,7 @@ async def update_user_role(
 ) -> User: ...
 
 
-async def get_user_by_id(session: AsyncSession, user_id: int) -> User | None:
+async def get_user_by_id(session: AsyncSession, user_id: int) -> InfoUserSchema | None:
     stmt = select(User).where(User.id == user_id)
     user: User | None = await session.scalar(stmt)
     return user
