@@ -1,6 +1,4 @@
-from typing import Any
-
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
@@ -20,7 +18,9 @@ async def create_user(
     session: AsyncSession = Depends(db_helper.session_dependency),
 ) -> User:
     if not (user := await create_user_service(session=session, user_data=user_data)):
-        raise UserAlreadyExists()
+        raise UserAlreadyExists(
+            status_code=status.HTTP_409_CONFLICT, detail="User already exists"
+        )
     return user
 
 

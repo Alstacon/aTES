@@ -17,16 +17,20 @@ async def validate_auth_user(session: AsyncSession, user_info: LogInUserSchema):
             session=session, username=user_info.username
         )
     ):
-        raise UnauthException
+        raise UnauthException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid username or password"
+        )
     if not utils.validate_password(
         password=user_info.password, hashed_password=db_user.password
     ):
-        raise UnauthException
+        raise UnauthException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid username or password"
+        )
     return db_user
 
 
 def get_current_auth_user(
-        payload: dict = Depends(get_current_token_payload),
+    payload: dict = Depends(get_current_token_payload),
 ) -> InfoUserSchema:
-    id: uuid | None = payload.get('sub')
+    id: uuid | None = payload.get("sub")
     ...
