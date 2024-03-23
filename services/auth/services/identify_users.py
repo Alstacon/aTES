@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import Depends
+from fastapi import Depends, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
@@ -13,18 +13,20 @@ from src.models.db_helper import db_helper
 from src.schemas.users import InfoUserSchema, LogInUserSchema
 
 
-async def validate_auth_user(session: AsyncSession, user_info: LogInUserSchema):
+async def validate_auth_user(
+    session: AsyncSession = Depends(db_helper.session_dependency),
+    username: str = Form(),
+    password: str = Form(),
+):
     if not (
         db_user := await users_service.get_user_by_username(
-            session=session, username=user_info.username
+            session=session, username=username
         )
     ):
         raise UnauthException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Invalid username or password"
         )
-    if not utils.validate_password(
-        password=user_info.password, hashed_password=db_user.password
-    ):
+    if not utils.validate_password(password=password, hashed_password=db_user.password):
         raise UnauthException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Invalid username or password"
         )

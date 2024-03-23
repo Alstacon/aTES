@@ -9,7 +9,7 @@ from src.models import User
 from src.models.db_helper import db_helper
 from src.schemas.users import InfoUserSchema, AddUserSchema
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter()
 
 
 @router.post("/", response_model=InfoUserSchema, status_code=status.HTTP_201_CREATED)

@@ -42,8 +42,6 @@ def decode_jwt(
 def get_current_token_payload(
     credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
 ) -> dict:
-    token = credentials.credentials
-    print(token)
     try:
         payload = decode_jwt(token)
     except InvalidTokenError as e:

@@ -1,10 +1,10 @@
 import uvicorn
 from fastapi import FastAPI
-from api.endpoints import users, tokens
+from api import api_router as v1_api_router
+from config import settings
 
 app = FastAPI()
-app.include_router(users.router)
-app.include_router(tokens.router)
+app.include_router(v1_api_router, prefix=settings.api_v1_prefix)
 
 
 if __name__ == "__main__":

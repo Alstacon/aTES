@@ -16,7 +16,7 @@ class AddUserSchema(UserSchema):
 
 class LogInUserSchema(BaseModel):
     username: str
-    password: str
+    password: bytes
 
 
 class UpdateUserSchema(BaseModel):

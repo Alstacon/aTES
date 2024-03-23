@@ -7,15 +7,13 @@ from src.models.db_helper import db_helper
 from src.schemas.tokens import InfoTokenSchema
 from src.schemas.users import LogInUserSchema, UserSchema
 
-router = APIRouter(prefix="/jwt", tags=["JWT"])
+router = APIRouter()
 
 
 @router.post("/login/", response_model=InfoTokenSchema)
 async def auth_user_issue_jwt(
-    user_info: LogInUserSchema,
-    session: AsyncSession = Depends(db_helper.session_dependency),
+    user: LogInUserSchema = Depends(validate_auth_user),
 ):
-    user: UserSchema = await validate_auth_user(session=session, user_info=user_info)
     jwt_payload = {
         "sub": user.id,
         "username": user.username,
